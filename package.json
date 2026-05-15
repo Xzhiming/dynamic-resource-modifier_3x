@@ -1,0 +1,101 @@
+{
+    "package_version": 2,
+    "version": "3.2.0",
+    "name": "dynamic-resource-modifier_3x",
+    "title": "i18n:dynamic-resource-modifier_3x.title",
+    "description": "Cocos Creator 3.x 资源批量修改工具：改名、改目录名、换 UUID、换 MD5",
+    "author": "小肥膘",
+    "license": "MIT",
+    "main": "./dist/main.js",
+    "editor": ">=3.4.0",
+    "panels": {
+        "default": {
+            "title": "i18n:dynamic-resource-modifier_3x.title",
+            "type": "dockable",
+            "main": "dist/panels/default/index.js",
+            "size": {
+                "min-width": 480,
+                "min-height": 720,
+                "width": 560,
+                "height": 1120
+            }
+        }
+    },
+    "contributions": {
+        "menu": [
+            {
+                "path": "i18n:menu.project",
+                "label": "i18n:dynamic-resource-modifier_3x.menu.open",
+                "message": "open-panel",
+                "group": "asset",
+                "order": 100
+            }
+        ],
+        "messages": {
+            "open-panel": {
+                "methods": [
+                    "openPanel"
+                ]
+            },
+            "run-batch-rename": {
+                "methods": [
+                    "runBatchRename"
+                ]
+            },
+            "run-folder-rename": {
+                "methods": [
+                    "runFolderRename"
+                ]
+            },
+            "run-uuid-modify": {
+                "methods": [
+                    "runUuidModify"
+                ]
+            },
+            "run-md5-modify": {
+                "methods": [
+                    "runMd5Modify"
+                ]
+            },
+            "preview-batch-rename": {
+                "methods": [
+                    "previewBatchRename"
+                ]
+            },
+            "pick-directory": {
+                "methods": [
+                    "pickDirectory"
+                ]
+            },
+            "get-default-directory": {
+                "methods": [
+                    "getDefaultDirectory"
+                ]
+            },
+            "get-mrm-locale": {
+                "methods": [
+                    "getMrmLocale"
+                ]
+            },
+            "append-result-log": {
+                "methods": [
+                    "appendResultLog"
+                ]
+            }
+        }
+    },
+    "scripts": {
+        "build": "tsc -p .",
+        "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+        "desktop": "npm run build && node electron/launch-desktop.cjs",
+        "desktop:electron": "npm install electron@^28.3.3 --save-optional"
+    },
+    "devDependencies": {
+        "@types/node": "^20.14.0",
+        "typescript": "^5.6.0"
+    },
+    "optionalDependencies": {
+        "electron": "^28.3.3",
+        "iconv-lite": "^0.6.3"
+    }
+}

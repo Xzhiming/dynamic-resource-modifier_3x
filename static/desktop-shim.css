@@ -1,0 +1,145 @@
+/* Electron：将 Cocos ui-* 替换为原生控件后的补充样式（对齐 confuse-co 桌面壳） */
+
+#mrm-panel.desktop-mrm-panel {
+    height: 100vh !important;
+    max-height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#mrm-panel.desktop-mrm-panel .panel-body {
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.desktop-toolbar {
+    position: relative;
+    flex-shrink: 0;
+    padding: 10px 12px;
+    background: var(--mrm-bg-band, #36363c);
+    border-bottom: 1px solid var(--mrm-border-soft, #4a4a52);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    pointer-events: auto;
+    isolation: isolate;
+}
+
+.desktop-toolbar-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.desktop-toolbar label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--mrm-text-muted, #d4d6e0);
+    flex: 1 1 200px;
+    min-width: 0;
+    pointer-events: auto;
+    -webkit-app-region: no-drag;
+}
+
+.desktop-toolbar-row .desktop-grow {
+    flex: 1 1 220px;
+    min-width: 120px;
+}
+
+.desktop-toolbar input[type="text"] {
+    flex: 1;
+    min-width: 80px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--mrm-border, #505058);
+    background: var(--mrm-bg-card, #3a3a42);
+    color: var(--mrm-text, #ebebf0);
+    pointer-events: auto;
+    -webkit-app-region: no-drag;
+}
+
+.desktop-toolbar input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.desktop-toolbar select#desktop-locale {
+    min-width: 120px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--mrm-border, #505058);
+    background: var(--mrm-bg-card, #3a3a42);
+    color: var(--mrm-text, #ebebf0);
+    pointer-events: auto;
+    -webkit-app-region: no-drag;
+}
+
+.desktop-toolbar select#desktop-locale option {
+    background-color: #3a3a42;
+    color: #ebebf0;
+}
+
+.desktop-toolbar button.desktop-btn-secondary {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--mrm-border, #505058);
+    background: var(--mrm-bg-preset, #44444c);
+    color: var(--mrm-text, #ebebf0);
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-app-region: no-drag;
+}
+
+.desktop-toolbar button.desktop-btn-primary {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: none;
+    background: linear-gradient(180deg, #5b8dd9 0%, #3d6bb0 100%);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-app-region: no-drag;
+}
+
+#mrm-panel .ui-prop-shim {
+    margin: 2px 0;
+    min-width: 0;
+}
+
+#mrm-panel .panel-body select {
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--mrm-border, #505058);
+    background: var(--mrm-bg-card, #3a3a42);
+    color: var(--mrm-text, #ebebf0);
+}
+
+#mrm-panel .panel-body input[type="text"],
+#mrm-panel .panel-body input[type="number"] {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--mrm-border, #505058);
+    background: var(--mrm-bg-card, #3a3a42);
+    color: var(--mrm-text, #ebebf0);
+}
+
+#mrm-panel .panel-body input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+#mrm-panel .panel-body textarea {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--mrm-border, #505058);
+    background: var(--mrm-bg-card, #3a3a42);
+    color: var(--mrm-text, #ebebf0);
+}

@@ -1,0 +1,319 @@
+<div id="mrm-panel">
+
+    <!-- 顶部标题栏 -->
+    <div class="panel-header">
+        <div class="panel-header-left">
+            <span class="panel-title" id="panel-title">…</span>
+            <span class="panel-version" id="panel-version">v3.2.0</span>
+        </div>
+        <span id="status-msg" class="status-msg"></span>
+    </div>
+
+    <!-- 可滚动内容 -->
+    <div class="panel-body">
+
+        <!-- ══ 通用设置 ═══════════════════════════════════════════════ -->
+        <details class="mrm-section" open style="--mrm-section-title:#5b8dd9">
+            <summary class="mrm-section-summary" data-mrm="common.summary">通用设置</summary>
+            <div class="section-tip" data-mrm="common.tipDefault" data-mrm-html></div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="common.labelTarget" data-mrm-tt="common.ttTarget">目标目录</ui-label>
+                <div slot="content" class="row-flex">
+                    <ui-input id="common-dir" class="grow mrm-path-tail" data-mrm-ph="common.phTarget"></ui-input>
+                    <button class="btn btn-mini" id="btn-pick-common-dir" data-mrm="common.btnPick">选择目录</button>
+                    <button class="btn btn-mini" id="btn-reset-common-dir" data-mrm="common.btnReset">重置</button>
+                </div>
+            </ui-prop>
+
+            <div class="section-tip" data-mrm="common.pathFilter" data-mrm-html>
+            </div>
+            <ui-prop>
+                <ui-label slot="label" data-mrm="common.labelPathIn" data-mrm-tt="common.ttPathIn">路径包含 glob</ui-label>
+                <div slot="content">
+                    <textarea id="mrm-path-include" class="mrm-filter-textarea" rows="2" data-mrm-ph="common.phPathIn"></textarea>
+                </div>
+            </ui-prop>
+            <ui-prop>
+                <ui-label slot="label" data-mrm="common.labelPathEx" data-mrm-tt="common.ttPathEx">路径排除 glob</ui-label>
+                <div slot="content">
+                    <textarea id="mrm-path-exclude" class="mrm-filter-textarea" rows="2" data-mrm-ph="common.phPathEx"></textarea>
+                </div>
+            </ui-prop>
+            <div class="row-flex">
+                <span class="row-label" data-mrm="common.labelSkipExt" data-mrm-title="common.titleSkipExt">按后缀排除（脚本/表格等）</span>
+                <ui-checkbox id="mrm-skip-ext-enabled" value="true"></ui-checkbox>
+            </div>
+            <ui-prop>
+                <ui-label slot="label" data-mrm="common.labelSkipList" data-mrm-tt="common.ttSkipList">跳过后缀列表</ui-label>
+                <div slot="content">
+                    <textarea id="mrm-path-skip-ext" class="mrm-filter-textarea" rows="2" data-mrm-ph="common.phSkipList"></textarea>
+                </div>
+            </ui-prop>
+        </details>
+
+        <!-- ══ 1. 批量改名 ════════════════════════════════════════════ -->
+        <details class="mrm-section" open style="--mrm-section-title:#f5a524">
+            <summary class="mrm-section-summary" data-mrm="rename.summary">① 批量修改资源名称</summary>
+            <div class="section-tip" data-mrm="rename.tip" data-mrm-html></div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="rename.labelMode">改名模式</ui-label>
+                <ui-select slot="content" id="rn-mode">
+                    <option value="replace" data-mrm="rename.modes.replace">🔁 查找替换</option>
+                    <option value="prefix" data-mrm="rename.modes.prefix">➕ 添加前缀</option>
+                    <option value="suffix" data-mrm="rename.modes.suffix">➕ 添加后缀</option>
+                    <option value="sequence" data-mrm="rename.modes.sequence">🔢 顺序编号</option>
+                    <option value="regex" data-mrm="rename.modes.regex">🧩 正则替换</option>
+                </ui-select>
+            </ui-prop>
+
+            <div class="rn-params" data-mode="replace">
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.find">查找</ui-label>
+                    <ui-input slot="content" id="rn-replace-from" data-mrm-ph="rename.phFind"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.to">替换为</ui-label>
+                    <ui-input slot="content" id="rn-replace-to" data-mrm-ph="rename.phTo"></ui-input>
+                </ui-prop>
+                <div class="row-flex">
+                    <span class="row-label" data-mrm="rename.ignoreCase">忽略大小写</span>
+                    <ui-checkbox id="rn-replace-ignore-case"></ui-checkbox>
+                </div>
+            </div>
+
+            <div class="rn-params hidden" data-mode="prefix">
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.prefix">前缀内容</ui-label>
+                    <ui-input slot="content" id="rn-prefix-text" data-mrm-ph="rename.phPrefix"></ui-input>
+                </ui-prop>
+            </div>
+
+            <div class="rn-params hidden" data-mode="suffix">
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.suffix">后缀内容</ui-label>
+                    <ui-input slot="content" id="rn-suffix-text" data-mrm-ph="rename.phSuffix"></ui-input>
+                </ui-prop>
+            </div>
+
+            <div class="rn-params hidden" data-mode="sequence">
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.base">基础名</ui-label>
+                    <ui-input slot="content" id="rn-seq-base" value="asset_" data-mrm-ph="rename.phSeqBase"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.start">起始编号</ui-label>
+                    <ui-num-input slot="content" id="rn-seq-start" value="1" step="1"></ui-num-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.pad">编号位数</ui-label>
+                    <ui-num-input slot="content" id="rn-seq-pad" value="3" min="1" max="8" step="1"></ui-num-input>
+                </ui-prop>
+                <div class="row-flex">
+                    <span class="row-label" data-mrm="rename.keepName">保留原名</span>
+                    <ui-checkbox id="rn-seq-keep"></ui-checkbox>
+                </div>
+            </div>
+
+            <div class="rn-params hidden" data-mode="regex">
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.regPattern">正则表达式</ui-label>
+                    <ui-input slot="content" id="rn-regex-pattern" data-mrm-ph="rename.phReg"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.regFlags">flags</ui-label>
+                    <ui-input slot="content" id="rn-regex-flags" data-mrm-ph="rename.phFlags"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="rename.regReplace">替换为</ui-label>
+                    <ui-input slot="content" id="rn-regex-replace" data-mrm-ph="rename.phRegSub"></ui-input>
+                </ui-prop>
+            </div>
+
+            <div class="prop-divider"></div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="rename.extFilter" data-mrm-tt="rename.ttExt">扩展名过滤</ui-label>
+                <ui-input slot="content" id="rn-ext-filter" data-mrm-ph="rename.phExt"></ui-input>
+            </ui-prop>
+            <div class="row-flex">
+                <span class="row-label" data-mrm="rename.subdir">递归子目录</span>
+                <ui-checkbox id="rn-recursive" value="true"></ui-checkbox>
+            </div>
+            <div class="row-flex">
+                <span class="row-label" data-mrm="rename.syncFilenameRefs" data-mrm-title="rename.ttSyncFilenameRefs">同步替换其它文件中的文件名引用</span>
+                <ui-checkbox id="rn-sync-filename-refs" value="true"></ui-checkbox>
+            </div>
+
+            <div class="action-row">
+                <button class="btn" id="btn-rn-preview" data-mrm="rename.btnPreview">🔍 预览</button>
+                <button class="btn btn-primary" id="btn-rn-run" data-mrm="rename.btnRun">▶ 执行批量改名</button>
+            </div>
+
+            <div id="rn-preview-box" class="preview-box hidden"></div>
+        </details>
+
+        <!-- ══ 2. 目录改名 ════════════════════════════════════════════ -->
+        <details class="mrm-section" style="--mrm-section-title:#f5a524">
+            <summary class="mrm-section-summary" data-mrm="folder.summary">② 修改资源目录名称</summary>
+            <div class="section-tip" data-mrm="folder.tip" data-mrm-html></div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="folder.newName">新目录名</ui-label>
+                <ui-input slot="content" id="fr-new-name" data-mrm-ph="folder.phName"></ui-input>
+            </ui-prop>
+
+            <div class="action-row">
+                <button class="btn btn-primary" id="btn-fr-run" data-mrm="folder.btnRun">▶ 执行目录改名</button>
+            </div>
+        </details>
+
+        <!-- ══ 3. UUID 修改 ═══════════════════════════════════════════ -->
+        <details class="mrm-section" style="--mrm-section-title:#f5a524">
+            <summary class="mrm-section-summary" data-mrm="uuid.summary">③ 修改资源 UUID</summary>
+            <div class="section-tip" data-mrm="uuid.tipMain" data-mrm-html></div>
+            <div class="callout callout-warn" data-mrm="uuid.callWarn" data-mrm-html></div>
+            <div class="callout callout-info" data-mrm="uuid.callInfo" data-mrm-html></div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="uuid.labelScope">作用范围</ui-label>
+                <ui-select slot="content" id="uuid-scope">
+                    <option value="single" data-mrm="shared.scopeSingle">🎯 单个资源</option>
+                    <option value="dir-flat" data-mrm="shared.scopeDirFlat">📂 目录下（不递归）</option>
+                    <option value="dir-all" data-mrm="shared.scopeDirAll">📁 目录下（递归全部）</option>
+                </ui-select>
+            </ui-prop>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="uuid.labelGen" data-mrm-tt="uuid.ttGen">UUID 生成策略</ui-label>
+                <ui-select slot="content" id="uuid-gen-mode">
+                    <option value="random-v4" data-mrm="uuid.optRand">随机 v4（默认）</option>
+                    <option value="salt-v4" data-mrm="uuid.optSalt">主盐确定性 v4（confuse-co 同源）</option>
+                </ui-select>
+            </ui-prop>
+
+            <div id="uuid-salt-fields" class="hidden">
+                <div class="section-tip" data-mrm="uuid.saltTip" data-mrm-html></div>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="uuid.cert">证书 .cer 路径</ui-label>
+                    <div slot="content" class="row-flex">
+                        <ui-input id="uuid-salt-cer" class="grow mrm-path-tail" data-mrm-ph="uuid.phCert"></ui-input>
+                        <button class="btn btn-mini" id="btn-uuid-pick-cer" data-mrm="uuid.pickCer">选文件</button>
+                    </div>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="uuid.product">产品名</ui-label>
+                    <ui-input slot="content" id="uuid-salt-product" placeholder="saltProductName"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="uuid.appVer">应用版本</ui-label>
+                    <ui-input slot="content" id="uuid-salt-version" placeholder="saltAppVersion"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="uuid.platform" data-mrm-tt="uuid.ttPlatform">平台类型</ui-label>
+                    <ui-input slot="content" id="uuid-salt-platform" data-mrm-ph="uuid.phPlatform"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" data-mrm="uuid.productUuid" data-mrm-tt="uuid.ttProductUuid">产品 UUID</ui-label>
+                    <ui-input slot="content" id="uuid-salt-product-uuid" placeholder="saltProductUuid"></ui-input>
+                </ui-prop>
+                <ui-prop>
+                    <ui-label slot="label" id="uuid-salt-nonce-label" data-mrm="uuid.buildNonce">构建随机数</ui-label>
+                    <div slot="content" class="row-flex">
+                        <ui-input id="uuid-salt-nonce" class="grow" data-mrm-ph="uuid.phNonce"></ui-input>
+                        <span class="row-label" data-mrm="uuid.randHex" data-mrm-title="uuid.titleRandHex" style="margin-left:8px;">随机 hex</span>
+                        <ui-checkbox id="uuid-salt-nonce-random" value="false"></ui-checkbox>
+                    </div>
+                </ui-prop>
+                <div class="row-flex">
+                    <span class="row-label" data-mrm="uuid.mergeObf" data-mrm-title="uuid.titleMerge">合并 obfuscate-secrets.json</span>
+                    <ui-checkbox id="uuid-merge-secrets" value="true"></ui-checkbox>
+                </div>
+            </div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="uuid.target" data-mrm-tt="uuid.ttTarget">目标路径</ui-label>
+                <div slot="content" class="row-flex">
+                    <ui-input id="uuid-target" class="grow mrm-path-tail" data-mrm-ph="uuid.phTarget"></ui-input>
+                    <button class="btn btn-mini" id="btn-uuid-pick-file" data-mrm="uuid.pickFile">选文件</button>
+                    <button class="btn btn-mini" id="btn-uuid-pick-dir" data-mrm="uuid.pickDir">选目录</button>
+                </div>
+            </ui-prop>
+
+            <div class="row-flex">
+                <span class="row-label" data-mrm="uuid.syncRef">同步替换项目中引用（推荐）</span>
+                <ui-checkbox id="uuid-update-refs" value="true"></ui-checkbox>
+            </div>
+            <div class="row-flex">
+                <span class="row-label" data-mrm="uuid.incFolder" data-mrm-title="uuid.titleFolder">更改目录 UUID（含文件夹 .meta）</span>
+                <ui-checkbox id="uuid-include-dir-uuid" value="false"></ui-checkbox>
+            </div>
+            <div class="row-flex">
+                <span class="row-label" data-mrm="uuid.incSp" data-mrm-title="uuid.titleSp">引用替换时含 settings / profiles</span>
+                <ui-checkbox id="uuid-include-sp" value="true"></ui-checkbox>
+            </div>
+
+            <div class="action-row">
+                <button class="btn btn-primary" id="btn-uuid-run" data-mrm="uuid.btnRun">▶ 执行 UUID 修改</button>
+            </div>
+        </details>
+
+        <!-- ══ 4. MD5 修改 ════════════════════════════════════════════ -->
+        <details class="mrm-section" style="--mrm-section-title:#f5a524">
+            <summary class="mrm-section-summary" data-mrm="md5.summary">④ 修改资源 MD5</summary>
+            <div class="section-tip" data-mrm="md5.tips" data-mrm-html></div>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="uuid.labelScope">作用范围</ui-label>
+                <ui-select slot="content" id="md5-scope">
+                    <option value="single" data-mrm="shared.scopeSingle">🎯 单个资源</option>
+                    <option value="dir-flat" data-mrm="shared.scopeDirFlat">📂 目录下（不递归）</option>
+                    <option value="dir-all" data-mrm="shared.scopeDirAll">📁 目录下（递归全部）</option>
+                </ui-select>
+            </ui-prop>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="md5.labelMode">修改方式</ui-label>
+                <ui-select slot="content" id="md5-mode">
+                    <option value="both" data-mrm="md5.optBoth">⚙️ both（两者都做）</option>
+                    <option value="bump-meta-ver" data-mrm="md5.optBump">🧾 bump-meta-ver（仅改 .meta.ver）</option>
+                    <option value="touch-content" data-mrm="md5.optTouch">🧬 touch-content（追加字节）</option>
+                </ui-select>
+            </ui-prop>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="md5.ext" data-mrm-tt="md5.ttExt">扩展名过滤</ui-label>
+                <ui-input slot="content" id="md5-ext-filter" data-mrm-ph="md5.phExt"></ui-input>
+            </ui-prop>
+
+            <ui-prop>
+                <ui-label slot="label" data-mrm="md5.target">目标路径</ui-label>
+                <div slot="content" class="row-flex">
+                    <ui-input id="md5-target" class="grow mrm-path-tail" data-mrm-ph="md5.phTarget"></ui-input>
+                    <button class="btn btn-mini" id="btn-md5-pick-file" data-mrm="md5.pickF">选文件</button>
+                    <button class="btn btn-mini" id="btn-md5-pick-dir" data-mrm="md5.pickD">选目录</button>
+                </div>
+            </ui-prop>
+
+            <div class="action-row">
+                <button class="btn btn-primary" id="btn-md5-run" data-mrm="md5.btnRun">▶ 执行 MD5 修改</button>
+            </div>
+        </details>
+
+        <!-- ══ 结果输出 ═══════════════════════════════════════════════ -->
+        <details class="mrm-section" open style="--mrm-section-title:#5b8dd9">
+            <summary class="mrm-section-summary" data-mrm="result.summary">执行结果</summary>
+            <div id="result-box" class="result-box"></div>
+            <div class="action-row">
+                <button class="btn btn-mini" id="btn-clear-result" data-mrm="result.btnClear">清空</button>
+            </div>
+        </details>
+
+    </div><!-- /panel-body -->
+
+    <div class="panel-footer">
+        <span class="footer-info" data-mrm="footer.tag">动态资源修改器 · Cocos Creator 3.x</span>
+    </div>
+
+</div>
