@@ -1,6 +1,6 @@
 {
     "package_version": 2,
-    "version": "3.2.0",
+    "version": "3.2.1",
     "name": "dynamic-resource-modifier_3x",
     "title": "i18n:dynamic-resource-modifier_3x.title",
     "description": "Cocos Creator 3.x 资源批量修改工具：改名、改目录名、换 UUID、换 MD5",

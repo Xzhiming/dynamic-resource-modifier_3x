@@ -1,91 +1,63 @@
 # Magic Resource Modifier
 
-A batch resource modification plugin for Cocos Creator 3.x (**TypeScript** source code, `tsc` output to `dist/`). **Current version: 3.2.0** (based on the `version` in `package.json`; see [CHANGELOG-1.0.md](./CHANGELOG/CHANGELOG-1.0.md) for change notes). The product version number is aligned with Creator's 2.x sister extension, [`dynamic-resource-modifier_2x`](../../2.x/dynamic-resource-modifier_2x). Milestone comparisons for both versions can be found at the top of [CHANGELOG-2.0.md](./CHANGELOG/CHANGELOG-2.0.md) and [CHANGELOG-1.0.md](./CHANGELOG/CHANGELOG-1.0.md) at **v3.2.0**. Four types of operations are provided through a separate panel:
+Cocos Creator 3.x 资源批量修改插件（**TypeScript** 源码，`tsc` 输出至 `dist/`）。**当前版本：3.2.1**（以 `package.json` 的 `version` 为准；变更说明见 [CHANGELOG-1.0.md](./CHANGELOG/CHANGELOG-1.0.md)）。**产品版本号**与 Creator **2.x** 姊妹扩展 [`dynamic-resource-modifier_2x`](../../2.x/dynamic-resource-modifier_2x)（*动态资源修改器*）对齐；双端里程碑对照见 [CHANGELOG-2.0.md](./CHANGELOG/CHANGELOG-2.0.md) 与 [CHANGELOG-1.0.md](./CHANGELOG/CHANGELOG-1.0.md) 顶部 **v3.2.0**。通过独立面板提供四类操作：
 
-1. **Batch rename resource names:** Supports five modes: find and replace, prefix, suffix, sequential numbering, and regular expressions. Automatically follows `.meta` migration; a "preview" is available before operation.
+1. **批量修改资源名称**：支持查找替换 / 前缀 / 后缀 / 顺序编号 / 正则五种模式，自动跟随 `.meta` 迁移；操作前可"预览"。
+2. **修改资源目录名称**：对目标目录整体重命名，`.meta` 同步迁移。
+3. **修改资源 UUID**：支持三种作用域 —— 单个资源、目录下不递归、目录下递归全部；生成 v4 UUID（可选 confuse-co 同源主盐）并与项目现有 UUID 去重；`image` 资源的 `subMetas` 中 `6c48a` / `f9941` 子项为 **`主UUID@子键`** 规范。默认同步替换 `.scene / .prefab / .anim / .material` 等及 `settings/`、`profiles/` 下文本（Build/发布等）；支持路径 glob、32 位紧凑 UUID、复合 `@6c48a` / `@f9941` 串替换。目录改 UUID 后可选全量 `reimport-asset` 等，详见变更日志。
+4. **修改资源 MD5**：两种策略 —— 仅改 `.meta.ver`（推荐）、追加内容改变物理 md5；可选"两者都做"。`.json` 文件在 `touch-content` 模式下自动回退为 `bump-meta-ver`。
 
-2. **Rename resource directory:** Renames the entire target directory, with `.meta` migration synchronized.
 
-3. **Modify Resource UUIDs**: Supports three scopes—single resource, non-recursive within a directory, and recursive across all resources within a directory; generates v4 UUIDs (optionally confuse-co with the same primary salt) and removes duplicates from existing UUIDs in the project; the `6c48a` / `f9941` sub-items in the `subMetas` of `image` resources follow the **`primary UUID@subkey`** specification. By default, it synchronously replaces `.scene` / `.prefab` / `.anim` / `.material` and text in `settings/` and `profiles/` (Build/Release, etc.); supports path glob, 32-bit compact UUID, and compound `@6c48a` / `@f9941` strings for replacement. After modifying the UUID in a directory, a full `reimport-asset` option is available; see the changelog for details.
+## 开发构建
 
-4. **Modify Resource MD5:** Two strategies: Modify only `.meta.ver` (recommended), append content to change the physical MD5; optional: "Do both". `.json` files automatically revert to `bump-meta-ver` in `touch-content` mode.
+1. 安装依赖：`npm install`
+2. 编译：`npm run build`（生成/更新 `dist/`）
+3. 清理编译产物（可选）：`npm run clean`
+4. （可选）桌面预览面板：`npm run desktop`（需先按需执行 `npm run desktop:electron` 安装 Electron）
 
-## Development and Build
+从源码开发时，每次修改 `src/` 下文件后需重新执行 `npm run build`，再在 Creator 中重载扩展。
 
-1. Install dependencies: `npm install`
+若仅使用已带 `dist/` 的发布包，可直接拷贝整个扩展目录，无需安装 Node。
 
-2. Compile: `npm run build` (generates/updates `dist/`)
+## 使用
 
-3. Clean up build artifacts (optional): `npm run clean`
+1. 拷贝插件目录到项目 `extensions/` 下或 Creator 全局扩展目录（若从源码克隆，请先完成上一节「开发构建」）
+2. 在 Creator 菜单 **扩展 → 扩展管理器** 启用本插件
+3. 菜单 **项目 → Magic Resource Modifier** 打开面板
+4. 选择目标目录 → 配置各分组参数 → 先"预览"再"执行"
 
-4. (Optional) Desktop preview panel: `npm run desktop` (requires running `npm run desktop:electron` to install Electron first)
+## 安全提示
 
-When developing from source code, after each modification to files under `src/`, you need to re-run `npm run build` and then reload the extension in Creator.
+- **所有操作均直接修改磁盘上的资源文件与 `.meta`**。强烈建议操作前提交 Git 或做好备份。
+- UUID 修改后请刷新 / 重启 Creator，避免缓存不一致。
+- 音频文件的 `touch-content` 策略追加字节后可能被部分严格解码器忽略，建议优先使用 `bump-meta-ver`。
 
-If using only a distribution package that includes `dist/`, you can directly copy the entire extension directory without installing Node.js.
+## 功能完整性
 
-## Usage
-
-1. Copy the plugin directory to your project's `extensions/` directory or the Creator global extension directory (if cloning from source code, please complete the "Development and Build" section in the previous section first).
-
-2. Enable the plugin in Creator's menu **Extensions → Extension Manager**.
-
-3. Open the panel in the menu **Project → Magic Resource Modifier**.
-
-4. Select the target directory → Configure the parameters for each group → Preview before executing.
-
-## Security Tips
-
-- **All operations directly modify resource files and `.meta` tags on your disk.** It is strongly recommended to commit a Git post or make a backup before performing any operations.
-
-- After modifying the UUID, please refresh/restart Creator to avoid cache inconsistencies.
-
-- The `touch-content` strategy for audio files may be ignored by some strict decoders after appending bytes; it is recommended to use `bump-meta-ver` instead.
-
-## Functionality Completeness
-
-| Function | Status | Description |
-
+| 功能 | 状态 | 说明 |
 | --- | --- | --- |
+| ① 批量改名（5种模式） | ✅ | replace / prefix / suffix / sequence / regex 全部实现 |
+| ① 预览功能 | ✅ | 限制 200 条，带 truncated 标志 |
+| ① .meta 跟随改名 | ✅ | `BatchRenameService` 内部与 `.meta` 同步重命名 |
+| ① 大小写改名（Windows/Mac） | ✅ | 两阶段 temp rename |
+| ② 目录改名 + .meta 同步 | ✅ | `FolderRenameService.renameFolder` |
+| ③ UUID 修改（三种 scope） | ✅ | `UuidModifier.modifyUuid`：single / dir-flat / dir-all |
+| ③ 全项目 UUID 去重 | ✅ | `UuidModifier.collectAllUuids` 扫描所有 .meta |
+| ③ subMetas UUID | ✅ | 子项可替换；`6c48a` / `f9941` 为 `主UUID@键` 形式，避免 missing |
+| ③ scene UUID 引用同步 | ✅ | 扫描 assets/ + settings/ + profiles/ |
+| ④ MD5 修改（bump-meta-ver） | ✅ | `Md5Modifier`：递增 ver 字段 |
+| ④ MD5 修改（touch-content） | ✅ | 按类型 append bytes / 换行 / 0x20；.json 自动回退 bump-meta-ver |
+| ④ MD5 修改（both） | ✅ | 两者同时执行 |
+| 通用目录选择 / 重置 | ✅ | 面板初始化时从 `assets/` 拉默认值 |
+| package.json 消息注册 | ✅ | 10 条 message 全部注册且对应 `dist/main.js` 中方法（含 `get-mrm-locale`、`append-result-log`） |
+| 面板 checkbox 初始值 | ✅ | `ready()` 中强制 `.value = true` |
 
-| ① Batch Renaming (5 modes) | ✅ | Implements all replace / prefix / suffix / sequence / regex commands |
 
-| ① Preview Function | ✅ | Limited to 200 entries, marked with truncated flag |
+## 注意
 
-| ① .meta file renaming | ✅ | `BatchRenameService` internally synchronizes renaming with `.meta` |
-
-| ① Case-sensitive renaming (Windows/Mac) | ✅ | Two-stage temp rename |
-
-| ② Directory renaming + .meta synchronization | ✅ | `FolderRenameService.renameFolder` |
-
-| ③ UUID Modification (three scopes) | ✅ | `UuidModifier.modifyUuid`: single / dir-flat / dir-all |
-
-| ③ Deduplicating UUIDs across the entire project | ✅ | `UuidModifier.collectAllUuids` scans all .meta files |
-
-③ subMetas UUIDs | ✅ | Sub-items are replaceable; `6c48a` / `f9941` are in the form of `primary UUID@key` to avoid missing entries |
-
-③ scene UUID reference synchronization | ✅ | Scans assets/ + settings/ + profiles/ |
-
-④ MD5 modification (bump-meta-ver) | ✅ | `Md5Modifier`: increments the ver field |
-
-④ MD5 modification (touch-content) | ✅ | Appends bytes / newline / 0x20 by type; .json automatically rolls back to bump-meta-ver |
-
-④ MD5 modification (both) | ✅ | Both can be executed simultaneously |
-
-General directory selection / reset | ✅ | Pulls default values ​​from `assets/` during panel initialization |
-
-package.json message registration | ✅ | All 10 messages are registered and correspond to methods in `dist/main.js` (including `get-mrm-locale` and `append-result-log`) |
-
-| Initial values ​​for panel checkboxes | ✅ | Force `.value = true` in `ready()` |
-
-## Note
-
-- **`version` (e.g., 3.2.0)** and the Creator **2.x** sister extension [`dynamic-resource-modifier_2x`](../../2.x/dynamic-resource-modifier_2x) are **product milestone aligned** for easy comparison of releases on both platforms; functionality and implementation are subject to the respective engine version branches.
-
-- If you still encounter "The asset ... is missing!" or resource errors after modifying the entire repository's UUID, you can close the project, delete `library/` and `temp/`, and then reopen it, or use the menu **Resources → Re-import Resources**. If you previously messed up the entire repository using version 1.2.4 or earlier, it is recommended to **restore from Git/backup** and then run the project with the current version.
-
-- Please handle `profiles/` with caution; generally, **do not** delete the entire directory without understanding the consequences, unless explicitly required by the documentation or engine process.
-
+- **`version`（如 3.2.0）** 与 Creator **2.x** 姊妹扩展 [`dynamic-resource-modifier_2x`](../../2.x/dynamic-resource-modifier_2x) 为**产品里程碑对齐**，便于双端对照发版；功能与实现以各引擎版本分支为准。
+- 整库改 UUID 后若仍有 **`The asset ... is missing!`** 或资源异常，可关闭项目后**删除** `library/`、`temp/` 再打开，或使用菜单 **资源 → 重新导入资源**；若曾用 1.2.4 及以前整库改坏，建议**从 Git/备份还原**后使用当前版本再跑。
+- 请谨慎处理 `profiles/`；一般**勿**在不了解后果时整目录删除，除非文档或引擎流程明确要求。
 ## License
 
 MIT
